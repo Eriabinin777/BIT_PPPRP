@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-client
+  labels:
+    app: my-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-client
+  template:
+    metadata:
+      labels:
+        app: my-client
+    spec:
+      containers:
+      - name: my-client
+        image: eriabinin777/my-client
+        ports:

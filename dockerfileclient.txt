@@ -1,0 +1,7 @@
+FROM python:3.11
+RUN pip install requests
+
+WORKDIR /app
+COPY request_stat.py /app
+
+CMD ["python", "request_stat.py"]

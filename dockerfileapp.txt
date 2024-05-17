@@ -1,0 +1,8 @@
+FROM python:3.11
+RUN pip install flask requests
+
+WORKDIR /app
+COPY control_stat.py /app
+
+EXPOSE 8000
+CMD ["python", "control_stat.py"]
