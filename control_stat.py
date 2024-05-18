@@ -1,23 +1,34 @@
 from flask import Flask, jsonify
-import datetime
+import requests
 
 app = Flask(__name__)
 k = 0
 
 def get_current_time():
-    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    response = requests.get('http://worldtimeapi.org/api/timezone/Europe/Moscow')
+    if response.status_code == 200:
+        return response.json()['datetime']
+    else:
+        return None
 
 def increment_counter():
     global k
     k += 1
 
 @app.route('/time', methods=['GET'])
-def time_endpoint():
+def get_time():
+    global k
     increment_counter()
-    return jsonify({'current_time': get_current_time(), 'requests_count': k})
+    
+    current_time = get_current_time()
+    if current_time:
+        return jsonify({'current_time': current_time, 'requests_count': k})
+    else:
+        return jsonify({'error': 'Failed to get current time'}), 555
 
 @app.route('/statistics', methods=['GET'])
-def statistics_endpoint():
+def get_statistics():
+    global k
     return jsonify({'total_requests': k})
 
 @app.errorhandler(404)
@@ -30,3 +41,4 @@ def internal_server_error(error):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)
+
